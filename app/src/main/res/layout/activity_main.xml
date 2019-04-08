@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".Activities.MainActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="90dp"
+            android:src="@drawable/udhari_logo"
+            android:layout_marginTop="130dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Manage your payments with \nlocal vendors and customers"
+            android:textColor="@android:color/white"
+            android:alpha="0.7"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_thin"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/form_bg">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+91-"
+                android:fontFamily="@font/roboto_thin"
+                android:id="@+id/phone_start"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"/>
+
+            <EditText
+                android:id="@+id/phone_number_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:background="#00ffffff"
+                android:hint="Phone No"
+                android:inputType="phone"
+                android:fontFamily="@font/roboto_thin"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:layout_toEndOf="@id/phone_start"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/form_bg">
+
+            <com.chaos.view.PinView
+                android:layout_centerInParent="true"
+                android:id="@+id/otp_edit_text"
+                style="@style/PinWidget.PinView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:cursorVisible="true"
+                android:fontFamily="@font/roboto_medium"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:cursorWidth="2dp"
+                app:hideLineWhenFilled="true"
+                app:itemCount="6"
+                app:itemHeight="44dp"
+                app:itemRadius="4dp"
+                app:itemSpacing="0dp"
+                app:itemWidth="44dp"
+                app:lineWidth="1dp"
+                app:lineColor="@android:color/white"
+                app:viewType="rectangle" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/login_signup_button"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:background="@drawable/button_large"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_gravity="center_horizontal"
+            android:text="LOGIN / SIGNUP"
+            android:visibility="gone"
+            android:stateListAnimator="@null"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:id="@+id/get_otp_button"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:background="@drawable/button_large"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_gravity="center_horizontal"
+            android:text="GET OTP"
+            android:stateListAnimator="@null"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:visibility="invisible"
+        android:id="@+id/layer"
+        android:alpha="0.6"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:id="@+id/loader"/>
+
+</FrameLayout>

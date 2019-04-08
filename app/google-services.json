@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "795614849689",
+    "firebase_url": "https://udhaari-fc6db.firebaseio.com",
+    "project_id": "udhaari-fc6db",
+    "storage_bucket": "udhaari-fc6db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795614849689:android:615a8da2084339e8",
+        "android_client_info": {
+          "package_name": "project.tronku.udhaari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795614849689-9o4mjfm2gna1d3l9mlk5dihcgi7o6e6i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "project.tronku.udhaari",
+            "certificate_hash": "43216d22fecf7c389df3946120da778db385b5d3"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEDGOTBnCrltOwYQN88l-8L4f_Nke86zc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795614849689-spki9v5baf6rogd2eihuvob57atck0cu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
