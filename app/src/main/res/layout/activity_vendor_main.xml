@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.VendorMainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vendor"/>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/vendor_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:titleTextColor="@android:color/white"
+        app:titleMarginStart="16dp"
+        style="@style/ToolbarTheme"
+        android:background="@color/colorPrimary"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="64dp"
+        android:id="@+id/vendor_fragments_framelayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/vendor_bottom_nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:menu="@menu/vendor_menu"
+        android:background="@color/colorPrimary"
+        app:itemIconTint="@drawable/menu_color"
+        app:itemTextColor="@drawable/menu_color"
+        android:layout_gravity="bottom"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

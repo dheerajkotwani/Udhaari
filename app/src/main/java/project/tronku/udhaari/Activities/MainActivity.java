@@ -1,5 +1,6 @@
 package project.tronku.udhaari.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -220,20 +222,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         if (mAuth.getCurrentUser() != null) {
-            if (UdhaariApp.getInstance().getPref().contains("name")) {
-                if (UdhaariApp.getInstance().getDataFromPref("type").equals("customer")) {
-                    startActivity(new Intent(this, CustomerMainActivity.class));
-                    finish();
+            if (UdhaariApp.getInstance().getPref().contains("phone")) {
+                if (UdhaariApp.getInstance().getPref().contains("name")) {
+                    if (UdhaariApp.getInstance().getDataFromPref("type").equals("customer"))
+                        startActivity(new Intent(MainActivity.this, CustomerMainActivity.class));
+                    else if (UdhaariApp.getInstance().getDataFromPref("type").equals("vendor"))
+                        startActivity(new Intent(MainActivity.this, VendorMainActivity.class));
                 }
-                else if (UdhaariApp.getInstance().getDataFromPref("type").equals("vendor")) {
-                    startActivity(new Intent(this, VendorMainActivity.class));
-                    finish();
-                }
-            }
-            else {
-                startActivity(new Intent(this, NewUserActivity.class));
-                finish();
+                else
+                    startActivity(new Intent(MainActivity.this, NewUserActivity.class));
             }
         }
     }

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -91,24 +92,37 @@ public class VendorSignUpActivity extends AppCompatActivity {
         firestore.collection("Users")
                 .document()
                 .set(userData)
+                .addOnSuccessListener(v ->
+
+                        firestore.collection("Vendors")
+                        .document()
+                        .set(newVendor)
+                        .addOnSuccessListener(s -> {
+
+                            Timber.e("Signed up successfully!");
+                            UdhaariApp.getInstance().saveToPref("name", name);
+                            UdhaariApp.getInstance().saveToPref("serviceName", serviceName);
+                            startActivity(new Intent(this, VendorMainActivity.class));
+                            finish();
+
+                        })
+                        .addOnFailureListener(f -> {
+
+                            Timber.e("Sign-up failed!");
+                            Timber.e("Failure!");
+                            loader.setVisibility(View.INVISIBLE);
+                            layer.setVisibility(View.INVISIBLE);
+                            Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
+
+                        }))
                 .addOnFailureListener(v -> {
                     Timber.e("User signing failed!");
+                    Timber.e("Failure!");
+                    loader.setVisibility(View.INVISIBLE);
+                    layer.setVisibility(View.INVISIBLE);
+                    Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
                 });
 
-        firestore.collection("Vendors")
-                .document()
-                .set(newVendor)
-                .addOnSuccessListener(v -> {
-                    Timber.e("Signed up successfully!");
-                    UdhaariApp.getInstance().saveToPref("name", name);
-                    UdhaariApp.getInstance().saveToPref("serviceName", serviceName);
-                })
-                .addOnFailureListener(v -> {
-                    Timber.e("Sign-up failed!");
-                });
-
-        startActivity(new Intent(this, VendorMainActivity.class));
-        finish();
     }
 
     public void hideKeyboard() {

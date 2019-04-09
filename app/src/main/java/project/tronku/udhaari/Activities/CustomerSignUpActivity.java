@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -79,23 +81,35 @@ public class CustomerSignUpActivity extends AppCompatActivity {
         firestore.collection("Users")
                 .document()
                 .set(userData)
-                .addOnFailureListener(v -> {
-                    Timber.e("User signing failed!");
-                });
-
-        firestore.collection("Customers")
-                .document()
-                .set(newCustomer)
                 .addOnSuccessListener(v -> {
-                    Timber.e("Signed up successfully!");
-                    UdhaariApp.getInstance().saveToPref("name", name);
+
+                    firestore.collection("Customers")
+                            .document()
+                            .set(newCustomer)
+                            .addOnSuccessListener(s -> {
+
+                                Timber.e("Signed up successfully!");
+                                UdhaariApp.getInstance().saveToPref("name", name);
+                                startActivity(new Intent(this, CustomerMainActivity.class));
+                                finish();
+
+                            })
+                            .addOnFailureListener(f -> {
+                                Timber.e("Sign-up failed!");
+                                Timber.e("Failure!");
+                                loader.setVisibility(View.INVISIBLE);
+                                layer.setVisibility(View.INVISIBLE);
+                                Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
+                            });
                 })
                 .addOnFailureListener(v -> {
-                    Timber.e("Sign-up failed!");
+                    Timber.e("User signing failed!");
+                    Timber.e("Failure!");
+                    loader.setVisibility(View.INVISIBLE);
+                    layer.setVisibility(View.INVISIBLE);
+                    Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
                 });
 
-        startActivity(new Intent(this, CustomerMainActivity.class));
-        finish();
     }
 
     public void hideKeyboard() {

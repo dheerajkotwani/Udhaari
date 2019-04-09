@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark"> #154360 </color>
     <color name="colorAccent">#f1c40f</color>
 
+    <color name="blueLighter"> #2471a3 </color>
 </resources>
