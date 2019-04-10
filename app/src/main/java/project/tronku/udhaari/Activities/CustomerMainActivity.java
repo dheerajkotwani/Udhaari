@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import project.tronku.udhaari.Fragments.Customer.CustomerAddFrag;
 import project.tronku.udhaari.Fragments.Customer.CustomerHistoryFrag;
-import project.tronku.udhaari.Fragments.Customer.CustomerNotifFrag;
 import project.tronku.udhaari.Fragments.Customer.CustomerPendingFrag;
 import project.tronku.udhaari.R;
 import project.tronku.udhaari.UdhaariApp;
@@ -59,10 +59,10 @@ public class CustomerMainActivity extends AppCompatActivity {
                     }
                     return true;
 
-                case R.id.customer_notif :
+                case R.id.customer_add :
                     if (position != 2) {
                         position = 2;
-                        loadFragment(new CustomerNotifFrag());
+                        loadFragment(new CustomerAddFrag());
                     }
                     return true;
             }

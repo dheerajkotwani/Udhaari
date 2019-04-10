@@ -7,13 +7,13 @@
         android:icon="@drawable/ic_pending"/>
 
     <item
+        android:icon="@drawable/ic_add"
+        android:title="Add"
+        android:id="@+id/customer_add"/>
+
+    <item
         android:id="@+id/customer_history"
         android:title="History"
         android:icon="@drawable/ic_history"/>
-
-    <item
-        android:id="@+id/customer_notif"
-        android:title="Notifs"
-        android:icon="@drawable/ic_notifications"/>
 
 </menu>

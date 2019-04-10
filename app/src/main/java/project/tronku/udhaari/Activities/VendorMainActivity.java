@@ -6,11 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import project.tronku.udhaari.Fragments.Customer.CustomerHistoryFrag;
-import project.tronku.udhaari.Fragments.Customer.CustomerNotifFrag;
-import project.tronku.udhaari.Fragments.Customer.CustomerPendingFrag;
-import project.tronku.udhaari.Fragments.Vendor.VendorAddFrag;
+import project.tronku.udhaari.Fragments.Customer.CustomerAddFrag;
 import project.tronku.udhaari.Fragments.Vendor.VendorHistoryFrag;
+import project.tronku.udhaari.Fragments.Vendor.VendorNotifFrag;
 import project.tronku.udhaari.Fragments.Vendor.VendorPendingFrag;
 import project.tronku.udhaari.R;
 import project.tronku.udhaari.UdhaariApp;
@@ -54,17 +52,17 @@ public class VendorMainActivity extends AppCompatActivity {
                     }
                     return true;
 
-                case R.id.vendor_add :
+                case R.id.vendor_notif :
                     if (position != 1) {
                         position = 1;
-                        loadFragment(new VendorHistoryFrag());
+                        loadFragment(new VendorNotifFrag());
                     }
                     return true;
 
                 case R.id.vendor_history :
                     if (position != 2) {
                         position = 2;
-                        loadFragment(new VendorAddFrag());
+                        loadFragment(new VendorHistoryFrag());
                     }
                     return true;
             }

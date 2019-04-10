@@ -1,4 +1,4 @@
-package project.tronku.udhaari.Fragments.Customer;
+package project.tronku.udhaari.Fragments.Vendor;
 
 
 import android.os.Bundle;
@@ -14,10 +14,10 @@ import project.tronku.udhaari.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CustomerNotifFrag extends Fragment {
+public class VendorNotifFrag extends Fragment {
 
 
-    public CustomerNotifFrag() {
+    public VendorNotifFrag() {
         // Required empty public constructor
     }
 

@@ -90,12 +90,12 @@ public class VendorSignUpActivity extends AppCompatActivity {
         VendorModel newVendor = new VendorModel(name, serviceName, phone);
 
         firestore.collection("Users")
-                .document()
+                .document(phone)
                 .set(userData)
                 .addOnSuccessListener(v ->
 
                         firestore.collection("Vendors")
-                        .document()
+                        .document(phone)
                         .set(newVendor)
                         .addOnSuccessListener(s -> {
 

@@ -28,7 +28,7 @@
         android:id="@+id/customer_bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:menu="@menu/customer_menu"
+        app:menu="@menu/customer_bottom_menu"
         android:background="@color/colorPrimary"
         app:itemIconTint="@drawable/menu_color"
         app:itemTextColor="@drawable/menu_color"

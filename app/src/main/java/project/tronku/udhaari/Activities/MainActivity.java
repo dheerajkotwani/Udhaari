@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                         UdhaariApp.getInstance().saveToPref("phone", "+91" + phone);
 
                         //checking for new user
+
                         firestore.collection("Users").whereEqualTo("phone", "+91" + phone)
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots -> {

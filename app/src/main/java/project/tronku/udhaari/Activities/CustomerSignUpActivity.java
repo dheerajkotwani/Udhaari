@@ -79,12 +79,12 @@ public class CustomerSignUpActivity extends AppCompatActivity {
         CustomerModel newCustomer = new CustomerModel(name, phone);
 
         firestore.collection("Users")
-                .document()
+                .document(phone)
                 .set(userData)
                 .addOnSuccessListener(v -> {
 
                     firestore.collection("Customers")
-                            .document()
+                            .document(phone)
                             .set(newCustomer)
                             .addOnSuccessListener(s -> {
 
