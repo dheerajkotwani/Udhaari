@@ -6,34 +6,120 @@
     tools:context=".Fragments.Customer.CustomerAddFrag">
 
 
-
-    <EditText
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="20dp"
-        android:textSize="25sp"
-        android:background="@drawable/button_large_colored"
-        android:hint="Search"
-        android:padding="5dp"
-        android:paddingStart="42dp"
-        android:fontFamily="@font/roboto_medium"/>
-
-    <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginStart="30dp"
-        android:src="@drawable/search_black"
-        android:layout_alignStart="@id/search_bar"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <FrameLayout
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
-        android:layout_below="@id/search_bar"
-        tools:listitem="@layout/Shops_item_layout"
-        android:id="@+id/customer_pending_recycler_view"/>
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/button_large_colored"
+            android:fontFamily="@font/roboto_medium"
+            android:hint="Search"
+            android:padding="5dp"
+            android:paddingStart="42dp"
+            android:textSize="22sp" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignStart="@id/search_bar"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="35dp"
+            android:src="@drawable/search_black"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/customer_pending_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/search_bar"
+            android:layout_marginTop="70dp"
+            tools:listitem="@layout/Shops_item_layout" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/add_amount"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/button_back"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Borrowing from:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="80dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Shop Name"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="200dp"
+            android:layout_marginRight="25dp"
+            android:fontFamily="@font/roboto_medium"
+            android:hint="₹ Amount"
+            android:inputType="number"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/add_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="250dp"
+            android:layout_marginTop="220dp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="Add Description"
+            android:textAlignment="textEnd"
+            android:textColor="@color/blueLighter" />
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="250dp"
+            android:layout_marginRight="25dp"
+            android:fontFamily="@font/roboto_medium"
+            android:hint="Description"
+            android:textSize="22sp"
+            android:visibility="gone" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_large_blue"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Borrow"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+    </FrameLayout>
 
 </FrameLayout>
