@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private PhoneAuthProvider.ForceResendingToken resendingToken;
 
-    private String codeSent, phone, type;
+    private String codeSent, phone, type, name;
     private boolean newUser;
 
     private AlphaAnimation fade;
@@ -187,8 +187,10 @@ public class MainActivity extends AppCompatActivity {
                                         Timber.e("New user = %s", newUser);
                                         Timber.e("Already registered");
 
+                                        name = queryDocumentSnapshots.getDocuments().get(0).get("name").toString();
                                         type = queryDocumentSnapshots.getDocuments().get(0).get("type").toString();
                                         UdhaariApp.getInstance().saveToPref("type", type);
+                                        UdhaariApp.getInstance().saveToPref("name", name);
                                         if (type.equals("customer")) {
                                             Timber.e("CUSTOMER");
                                             startActivity(new Intent(MainActivity.this, CustomerMainActivity.class));

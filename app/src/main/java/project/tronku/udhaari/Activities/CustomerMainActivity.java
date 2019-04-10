@@ -10,10 +10,15 @@ import project.tronku.udhaari.Fragments.Customer.CustomerHistoryFrag;
 import project.tronku.udhaari.Fragments.Customer.CustomerNotifFrag;
 import project.tronku.udhaari.Fragments.Customer.CustomerPendingFrag;
 import project.tronku.udhaari.R;
+import project.tronku.udhaari.UdhaariApp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class CustomerMainActivity extends AppCompatActivity {
 
@@ -21,6 +26,8 @@ public class CustomerMainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     @BindView(R.id.customer_toolbar)
     Toolbar toolbar;
+
+    private FirebaseAuth auth;
 
     private int position = 0;
 
@@ -30,6 +37,7 @@ public class CustomerMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_customer_main);
 
         ButterKnife.bind(this);
+        auth = FirebaseAuth.getInstance();
 
         setSupportActionBar(toolbar);
         toolbar.setTitleTextAppearance(this, R.style.ToolbarTheme);
@@ -69,4 +77,30 @@ public class CustomerMainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.profile:
+                //
+                return true;
+            case R.id.about:
+                return true;
+            case R.id.sign_out:
+                auth.signOut();
+                UdhaariApp.getInstance().clearPrefs();
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+                return true;
+            case R.id.friends:
+                return true;
+        }
+        return false;
+    }
 }
