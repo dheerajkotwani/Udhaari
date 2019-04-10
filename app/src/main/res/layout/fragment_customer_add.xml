@@ -5,9 +5,35 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Customer.CustomerAddFrag">
 
-    <TextView
+
+
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="20dp"
+        android:textSize="25sp"
+        android:background="@drawable/button_large_colored"
+        android:hint="Search"
+        android:padding="5dp"
+        android:paddingStart="42dp"
+        android:fontFamily="@font/roboto_medium"/>
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/search_black"
+        android:layout_alignStart="@id/search_bar"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Add" />
+        android:layout_marginTop="70dp"
+        android:layout_below="@id/search_bar"
+        tools:listitem="@layout/Shops_item_layout"
+        android:id="@+id/customer_pending_recycler_view"/>
 
 </FrameLayout>
