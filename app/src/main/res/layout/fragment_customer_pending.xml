@@ -3,11 +3,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray"
     tools:context=".Fragments.Customer.CustomerPendingFrag">
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/gray"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/cash_icon"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:src="@drawable/ic_notes"/>
+
+        <!--<ImageView-->
+            <!--android:id="@+id/rupee_icon"-->
+            <!--android:layout_marginStart="16dp"-->
+            <!--android:layout_marginTop="38dp"-->
+            <!--android:layout_marginEnd="4dp"-->
+            <!--android:layout_width="26dp"-->
+            <!--android:layout_height="26dp"-->
+            <!--android:src="@drawable/ic_pending"-->
+            <!--android:tint="@android:color/holo_red_dark"-->
+            <!--android:layout_toEndOf="@id/cash_icon"/>-->
+
+        <TextView
+            android:id="@+id/customer_total_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            tools:text=" ₹145"
+            android:textStyle="bold"
+            android:textSize="34sp"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/cash_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="borrowed"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto_medium"
+            android:layout_toEndOf="@id/customer_total_pending"
+            android:layout_alignBottom="@id/customer_total_pending"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="6dp"/>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="PENDING" />
+        android:layout_marginTop="106dp"
+        tools:listitem="@layout/pending_item_layout"
+        android:id="@+id/customer_pending_recycler_view"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:visibility="invisible"
+        android:id="@+id/layer"
+        android:alpha="0.6"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:id="@+id/loader"/>
 
 </FrameLayout>
