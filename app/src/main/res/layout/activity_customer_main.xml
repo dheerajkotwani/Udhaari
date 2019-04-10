@@ -14,7 +14,7 @@
         app:titleTextColor="@android:color/white"
         app:titleMarginStart="16dp"
         style="@style/ToolbarTheme"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/blueLighter"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:menu="@menu/customer_bottom_menu"
-        android:background="@color/colorPrimary"
+        android:background="@color/blueLighter"
         app:itemIconTint="@drawable/menu_color"
         app:itemTextColor="@drawable/menu_color"
         android:layout_gravity="bottom"/>

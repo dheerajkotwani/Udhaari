@@ -5,20 +5,20 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Customer.CustomerAddFrag">
 
-
     <FrameLayout
-        android:id="@+id/search"
+        android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible">
 
         <EditText
-            android:id="@+id/search_bar"
+            android:id="@+id/search_edit_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="20dp"
             android:background="@drawable/button_large_colored"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="@android:color/black"
             android:hint="Search"
             android:padding="5dp"
             android:paddingStart="42dp"
@@ -27,98 +27,143 @@
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_alignStart="@id/search_bar"
             android:layout_marginStart="30dp"
             android:layout_marginTop="35dp"
             android:src="@drawable/search_black"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/customer_pending_recycler_view"
+            android:id="@+id/vendor_list_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_bar"
             android:layout_marginTop="70dp"
-            tools:listitem="@layout/Shops_item_layout" />
+            tools:listitem="@layout/shops_item_layout" />
+
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/add_amount"
+        android:id="@+id/add_amount_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/back_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/button_back"
-            android:visibility="visible" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="60dp"
-            android:fontFamily="@font/roboto_medium"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/roboto_thin"
             android:text="Borrowing from:"
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/shop_name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="46dp"
             android:fontFamily="@font/roboto_bold"
             android:text="Shop Name"
-            android:textSize="22sp" />
+            android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/amount"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="25dp"
-            android:layout_marginTop="200dp"
             android:layout_marginRight="25dp"
-            android:fontFamily="@font/roboto_medium"
-            android:hint="₹ Amount"
-            android:inputType="number"
-            android:textSize="22sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/add_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="250dp"
-            android:layout_marginTop="220dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="Add Description"
-            android:textAlignment="textEnd"
-            android:textColor="@color/blueLighter" />
+            <ImageView
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:src="@drawable/ic_bill"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center_horizontal"/>
 
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="250dp"
-            android:layout_marginRight="25dp"
-            android:fontFamily="@font/roboto_medium"
-            android:hint="Description"
-            android:textSize="22sp"
-            android:visibility="gone" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/button_large_gray">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:layout_margin="10dp"
-            android:background="@drawable/button_large_blue"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Borrow"
-            android:textColor="#fff"
-            android:textSize="18sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹"
+                    android:fontFamily="sans-serif"
+                    android:textSize="22sp"
+                    android:textColor="@android:color/black"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"/>
+
+                <EditText
+                    android:layout_centerVertical="true"
+                    android:id="@+id/amount_edit_text"
+                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="38dp"
+                    android:hint="Amount"
+                    android:inputType="number"
+                    android:textSize="22sp" />
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/description_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_large_gray"
+                android:maxLines="3"
+                android:padding="14dp"
+                android:paddingStart="22dp"
+                android:fontFamily="@font/roboto_medium"
+                android:hint="Description"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/borrow_button"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_large_blue"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Borrow"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/search_again_button"
+                android:layout_width="150dp"
+                android:layout_height="46dp"
+                android:background="@drawable/button_large_gray"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:src="@drawable/search_black"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:text="Search"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:layout_marginStart="14dp"
+                    android:textColor="@android:color/black"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </FrameLayout>
 
