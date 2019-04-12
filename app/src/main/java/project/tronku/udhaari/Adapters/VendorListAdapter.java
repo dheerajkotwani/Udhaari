@@ -172,11 +172,11 @@ public class VendorListAdapter extends RecyclerView.Adapter<VendorListAdapter.Vi
                             if (dataTask.isSuccessful()) {
                                 Timber.e("Added new payment successfully!");
                                 Toast.makeText(context, "Transaction added!", Toast.LENGTH_SHORT).show();
-                                dialog.cancel();
                             }
-                        }).addOnFailureListener(e -> {
-                            Timber.e("Update failed: %s", e.getMessage());
-                            Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
+                            else {
+                                Timber.e("Update failed: %s", dataTask.getException().toString());
+                                Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
+                            }
                             dialog.cancel();
                         });
 

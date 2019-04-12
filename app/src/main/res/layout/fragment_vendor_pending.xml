@@ -9,6 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:id="@+id/owe_layout"
         android:background="@color/gray"
         android:gravity="center">
 
@@ -18,29 +19,33 @@
             android:layout_height="90dp"
             android:src="@drawable/ic_notes"/>
 
-        <!--<ImageView-->
-        <!--android:id="@+id/rupee_icon"-->
-        <!--android:layout_marginStart="16dp"-->
-        <!--android:layout_marginTop="38dp"-->
-        <!--android:layout_marginEnd="4dp"-->
-        <!--android:layout_width="26dp"-->
-        <!--android:layout_height="26dp"-->
-        <!--android:src="@drawable/ic_pending"-->
-        <!--android:tint="@android:color/holo_red_dark"-->
-        <!--android:layout_toEndOf="@id/cash_icon"/>-->
-
-        <TextView
-            android:id="@+id/customer_total_pending"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            tools:text=" ₹145"
-            android:textStyle="bold"
-            android:textSize="34sp"
-            android:fontFamily="sans-serif-black"
-            android:textColor="@color/green"
+            android:layout_toEndOf="@id/cash_icon"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/cash_icon"/>
+            android:id="@+id/amount_layout"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ₹"
+                android:textStyle="bold"
+                android:textSize="34sp"
+                android:fontFamily="sans-serif-black"
+                android:textColor="@color/green"/>
+
+            <TextView
+                android:id="@+id/vendor_total_pending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 200"
+                android:textSize="34sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/green"/>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,19 +53,74 @@
             android:text="owed"
             android:textSize="16sp"
             android:fontFamily="@font/roboto_medium"
-            android:layout_toEndOf="@id/customer_total_pending"
-            android:layout_alignBottom="@id/customer_total_pending"
+            android:layout_toEndOf="@id/amount_layout"
+            android:layout_alignBottom="@id/amount_layout"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="6dp"/>
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="106dp"
-        tools:listitem="@layout/pending_item_layout"
-        android:id="@+id/customer_pending_recycler_view"/>
+        android:id="@+id/vendor_pending_swipe_refresh"
+        android:layout_marginTop="106dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/pending_item_layout"
+            android:id="@+id/vendor_pending_recycler_view"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/no_payment_layout"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:src="@drawable/ic_dancing"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_thin"
+            android:textSize="20sp"
+            android:text="No pending payments!"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:src="@drawable/ic_crying"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_thin"
+            android:textSize="20sp"
+            android:text="Error while fetching!"/>
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

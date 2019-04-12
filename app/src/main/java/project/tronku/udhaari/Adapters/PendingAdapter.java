@@ -57,12 +57,21 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
         String name = paymentModels.get(position).getName();
         String phone = paymentModels.get(position).getPhone();
         int amount = paymentModels.get(position).getAmount();
+        String type = UdhaariApp.getInstance().getDataFromPref("type");
 
         holder.name.setText(name);
         holder.phone.setText(phone);
         holder.amount.setText(String.valueOf(amount));
 
-        holder.pendingItem.setOnClickListener(v -> showDialog(name, phone, amount));
+        if (type.equals("vendor")) {
+            holder.symbol.setTextColor(context.getResources().getColor(R.color.green));
+            holder.amount.setTextColor(context.getResources().getColor(R.color.green));
+        }
+
+        holder.pendingItem.setOnClickListener(v -> {
+            if (type.equals("customer"))
+                showDialog(name, phone, amount);
+        });
     }
 
     private void showDialog(String name, String phone, int amount) {
@@ -131,11 +140,11 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
             if (task.isSuccessful()) {
                 Timber.e("Added new payment successfully!");
                 Toast.makeText(context, "Transaction added! Swipe to refresh.", Toast.LENGTH_SHORT).show();
-                dialog.cancel();
             }
-        }).addOnFailureListener(e -> {
-            Timber.e("Update failed: %s", e.getMessage());
-            Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
+            else {
+                Timber.e("Update failed: %s", task.getException().toString());
+                Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
+            }
             dialog.cancel();
         });
     }
@@ -151,6 +160,8 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
         TextView name;
         @BindView(R.id.pending_amount)
         TextView amount;
+        @BindView(R.id.symbol)
+        TextView symbol;
         @BindView(R.id.pending_phone)
         TextView phone;
         @BindView(R.id.pending_item)
