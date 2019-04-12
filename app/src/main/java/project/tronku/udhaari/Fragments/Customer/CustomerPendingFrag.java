@@ -77,10 +77,10 @@ public class CustomerPendingFrag extends Fragment {
         firestore = FirebaseFirestore.getInstance();
         adapter = new PendingAdapter(getContext(), paymentsList);
         String phone = UdhaariApp.getInstance().getDataFromPref("phone");
+        fillRecyclerView(phone);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        fillRecyclerView(phone);
 
         swipeRefreshLayout.setOnRefreshListener(() -> fillRecyclerView(phone));
 
@@ -154,4 +154,10 @@ public class CustomerPendingFrag extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
 }

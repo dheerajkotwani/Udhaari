@@ -5,9 +5,9 @@
         android:title="Profile"
         android:id="@+id/profile"/>
 
-    <item
-        android:title="Friends"
-        android:id="@+id/friends"/>
+    <!--<item-->
+        <!--android:title="Friends"-->
+        <!--android:id="@+id/friends"/>-->
 
     <item
         android:title="Sign out"

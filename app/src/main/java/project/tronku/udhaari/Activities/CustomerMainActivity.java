@@ -98,8 +98,6 @@ public class CustomerMainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
                 return true;
-            case R.id.friends:
-                return true;
         }
         return false;
     }
