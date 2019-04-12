@@ -2,8 +2,13 @@ package project.tronku.udhaari.Models;
 
 public class PaymentModel {
 
-    private String name, phone, date;
+    private String name, phone, date, description;
     private int amount;
+
+    public PaymentModel(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
 
     public PaymentModel(String name, String phone, int amount) {
         this.name = name;
@@ -11,11 +16,12 @@ public class PaymentModel {
         this.amount = amount;
     }
 
-    public PaymentModel(String name, String phone, int amount, String date) {
+    public PaymentModel(String name, String phone, int amount, String date, String description) {
         this.name = name;
         this.phone = phone;
         this.amount = amount;
         this.date = date;
+        this.description = description;
     }
 
     public String getName() {
@@ -50,4 +56,11 @@ public class PaymentModel {
         this.date = date;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

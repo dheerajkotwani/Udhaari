@@ -3,6 +3,7 @@ package project.tronku.udhaari.Fragments.Customer;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -130,7 +132,7 @@ public class CustomerPendingFrag extends Fragment {
 
                     }
                     else {
-                        Timber.e("Fetching pending data failed!");
+                        Timber.e("OnComplete: Fetching pending data failed!");
                         errorLayout.setVisibility(View.VISIBLE);
                     }
 
@@ -138,6 +140,12 @@ public class CustomerPendingFrag extends Fragment {
                     loader.setVisibility(View.INVISIBLE);
                     layer.setVisibility(View.INVISIBLE);
 
+                })
+                .addOnFailureListener(e -> {
+                    Timber.e("OnFailure: Fetching pending data failed!");
+                    errorLayout.setVisibility(View.VISIBLE);
+                    loader.setVisibility(View.INVISIBLE);
+                    layer.setVisibility(View.INVISIBLE);
                 });
     }
 
