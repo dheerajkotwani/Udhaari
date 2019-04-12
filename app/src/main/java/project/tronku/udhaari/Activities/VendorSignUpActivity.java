@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,41 +88,28 @@ public class VendorSignUpActivity extends AppCompatActivity {
         userData.put("phone", phone);
         userData.put("type", "vendor");
 
-        VendorModel newVendor = new VendorModel(name, serviceName, phone);
+        Map<String, Object> vendorData = new HashMap<>();
+        userData.put("name", name);
+        userData.put("phone", phone);
+        userData.put("serviceName", serviceName);
 
-        firestore.collection("Users")
-                .document(phone)
-                .set(userData)
-                .addOnSuccessListener(v ->
-
-                        firestore.collection("Vendors")
-                        .document(phone)
-                        .set(newVendor)
-                        .addOnSuccessListener(s -> {
-
-                            Timber.e("Signed up successfully!");
-                            UdhaariApp.getInstance().saveToPref("name", name);
-                            UdhaariApp.getInstance().saveToPref("serviceName", serviceName);
-                            startActivity(new Intent(this, VendorMainActivity.class));
-                            finish();
-
-                        })
-                        .addOnFailureListener(f -> {
-
-                            Timber.e("Sign-up failed!");
-                            Timber.e("Failure!");
-                            loader.setVisibility(View.INVISIBLE);
-                            layer.setVisibility(View.INVISIBLE);
-                            Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
-
-                        }))
-                .addOnFailureListener(v -> {
-                    Timber.e("User signing failed!");
-                    Timber.e("Failure!");
-                    loader.setVisibility(View.INVISIBLE);
-                    layer.setVisibility(View.INVISIBLE);
-                    Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
-                });
+        firestore.runTransaction((Transaction.Function<Void>) transaction -> {
+            transaction.set(firestore.collection("Vendor").document(phone), vendorData);
+            transaction.set(firestore.collection("Users").document(phone), userData);
+            return null;
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Timber.e("Signed up successfully!");
+                UdhaariApp.getInstance().saveToPref("name", name);
+                startActivity(new Intent(this, CustomerMainActivity.class));
+                finish();
+            }
+        }).addOnFailureListener(e -> {
+            Timber.e("User signing failed: %s", e.getMessage());
+            loader.setVisibility(View.INVISIBLE);
+            layer.setVisibility(View.INVISIBLE);
+            Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
+        });
 
     }
 
