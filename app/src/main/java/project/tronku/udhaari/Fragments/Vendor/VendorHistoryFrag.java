@@ -8,14 +8,52 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import project.tronku.udhaari.Adapters.HistoryAdapter;
+import project.tronku.udhaari.Models.PaymentModel;
 import project.tronku.udhaari.R;
+import project.tronku.udhaari.UdhaariApp;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class VendorHistoryFrag extends Fragment {
 
+    @BindView(R.id.vendor_history_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.vendor_history_recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.error_layout)
+    LinearLayout errorLayout;
+    @BindView(R.id.no_data_layout)
+    LinearLayout noDataLayout;
+    @BindView(R.id.loader)
+    ProgressBar loader;
+    @BindView(R.id.layer)
+    View layer;
+
+    private View view;
+    private Unbinder unbinder;
+    private HistoryAdapter adapter;
+    private ArrayList<PaymentModel> paymentModels = new ArrayList<>();
+
+    private FirebaseFirestore firestore;
 
     public VendorHistoryFrag() {
         // Required empty public constructor
@@ -25,8 +63,84 @@ public class VendorHistoryFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_vendor_history, container, false);
+        view = inflater.inflate(R.layout.fragment_vendor_history, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        firestore = FirebaseFirestore.getInstance();
+
+        adapter = new HistoryAdapter(getContext(), paymentModels);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+        String phone = UdhaariApp.getInstance().getDataFromPref("phone");
+        fillRecyclerView(phone);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> fillRecyclerView(phone));
+
+        return view;
+    }
+
+    private void fillRecyclerView(String phone) {
+        loader.setVisibility(View.VISIBLE);
+        layer.setVisibility(View.VISIBLE);
+
+        firestore.collection("Vendors").document(phone)
+                .collection("History")
+                .orderBy("timeStamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+
+                    ArrayList<PaymentModel> list = new ArrayList<>();
+
+                    if (task.isSuccessful()) {
+
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            String name = snapshot.get("name").toString();
+                            String phoneNo = snapshot.get("phone").toString();
+                            int amount = Integer.parseInt(snapshot.get("amount").toString());
+                            String date = snapshot.get("date").toString();
+                            String time = snapshot.get("time").toString();
+                            long timestamp = snapshot.getLong("timeStamp");
+                            String description = snapshot.get("description").toString();
+                            String status = snapshot.get("status").toString();
+
+                            PaymentModel paymentModel = new PaymentModel(name, phoneNo, amount, date, time, description, timestamp, status);
+                            list.add(paymentModel);
+                        }
+                        //update adapter
+                        paymentModels.clear();
+                        paymentModels = list;
+
+                        if (paymentModels.size() != 0) {
+                            adapter.updateList(paymentModels);
+                        }
+                        else {
+                            noDataLayout.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                    else {
+                        Timber.e("OnComplete: Fetching pending data failed!");
+                        errorLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    swipeRefreshLayout.setRefreshing(false);
+                    loader.setVisibility(View.INVISIBLE);
+                    layer.setVisibility(View.INVISIBLE);
+
+                })
+                .addOnFailureListener(e -> {
+                    Timber.e("OnFailure: Fetching pending data failed!");
+                    errorLayout.setVisibility(View.VISIBLE);
+                    loader.setVisibility(View.INVISIBLE);
+                    layer.setVisibility(View.INVISIBLE);
+                });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
 }
