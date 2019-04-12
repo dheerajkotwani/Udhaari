@@ -153,7 +153,7 @@ public class VendorListAdapter extends RecyclerView.Adapter<VendorListAdapter.Vi
                             transaction.set(firestore.collection("Customers").document(userPhone).collection("Pending").document(phone), pendingVendorMap);
 
                             //adding data to Customers -> History
-                            VendorModel historyVendorModel = new VendorModel(name, phone, latestAmount, dateStr, timeStr, description, timeStamp);
+                            VendorModel historyVendorModel = new VendorModel(name, phone, latestAmount, dateStr, timeStr, description, timeStamp, "borrowed");
                             transaction.set(firestore.collection("Customers").document(userPhone).collection("History").document(), historyVendorModel);
 
                             //adding data to Vendors -> Pending
@@ -164,7 +164,7 @@ public class VendorListAdapter extends RecyclerView.Adapter<VendorListAdapter.Vi
                             transaction.set(firestore.collection("Vendors").document(phone).collection("Pending").document(userPhone), pendingCustomerMap);
 
                             //adding data to Vendors -> History
-                            CustomerModel historyCustomerModel = new CustomerModel(userName, userPhone, latestAmount, dateStr, timeStr, description, timeStamp);
+                            CustomerModel historyCustomerModel = new CustomerModel(userName, userPhone, latestAmount, dateStr, timeStr, description, timeStamp, "borrowed");
                             transaction.set(firestore.collection("Vendors").document(phone).collection("History").document(), historyCustomerModel);
 
                             return null;

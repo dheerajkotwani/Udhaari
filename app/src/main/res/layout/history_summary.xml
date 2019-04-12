@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:weightSum="6"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="4">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/summary_name"
+            tools:text="Name"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/summary_phone"
+            tools:text="Phone"
+            android:textSize="14sp"
+            android:fontFamily="@font/roboto_thin"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹"
+                android:id="@+id/rupee_symbol"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="26sp"
+                android:textColor="@android:color/black"
+                android:fontFamily="sans-serif-black"/>
+
+            <TextView
+                android:id="@+id/summary_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="200"
+                android:gravity="center"
+                android:textSize="26sp"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/roboto_bold"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Description"
+            android:id="@+id/summary_description"
+            android:fontFamily="@font/roboto_thin"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_weight="2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/summary_date"
+            tools:text="16-Apr-2019"
+            android:textSize="14sp"
+            android:textColor="@color/blueLighter"
+            android:fontFamily="@font/roboto_medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/summary_time"
+            tools:text="4:13 PM"
+            android:textSize="14sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+    </LinearLayout>
+
+</LinearLayout>

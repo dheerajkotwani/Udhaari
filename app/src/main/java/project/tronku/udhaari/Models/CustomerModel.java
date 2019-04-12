@@ -2,7 +2,7 @@ package project.tronku.udhaari.Models;
 
 public class CustomerModel {
 
-    private String name, phone, date, description, time;
+    private String name, phone, date, description, time, status;
     private int amount;
     private long timeStamp;
 
@@ -11,7 +11,7 @@ public class CustomerModel {
         this.phone = phone;
     }
 
-    public CustomerModel(String name, String phone, int amount, String date, String time, String description, long timeStamp) {
+    public CustomerModel(String name, String phone, int amount, String date, String time, String description, long timeStamp, String status) {
         this.name = name;
         this.phone = phone;
         this.date = date;
@@ -19,6 +19,7 @@ public class CustomerModel {
         this.amount = amount;
         this.time = time;
         this.timeStamp = timeStamp;
+        this.status = status;
     }
 
     public String getName() {
@@ -75,5 +76,13 @@ public class CustomerModel {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

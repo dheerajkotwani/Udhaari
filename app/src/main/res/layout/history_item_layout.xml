@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/history_item"
     android:orientation="horizontal"
     android:weightSum="5"
     android:background="@android:color/white"
@@ -21,7 +22,7 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/history_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -38,38 +39,58 @@
             android:weightSum="2">
 
             <TextView
-                android:id="@+id/phone"
+                android:id="@+id/history_phone"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textColor="@android:color/darker_gray"
                 android:layout_marginEnd="14dp"
                 tools:text="+918005709570"
-                android:fontFamily="@font/roboto_medium"
+                android:fontFamily="@font/roboto_thin"
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/history_dateTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                tools:text="16 April, 2019"
-                android:fontFamily="@font/roboto_medium"/>
+                tools:text="16-Apr-2019"
+                android:fontFamily="@font/roboto_thin"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:text="₹200"
         android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="26sp"
-        tools:textColor="@android:color/holo_red_dark"
-        android:fontFamily="sans-serif-black"/>
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="₹"
+            android:id="@+id/rupee_symbol"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            android:textColor="@android:color/holo_red_dark"
+            android:fontFamily="sans-serif-black"/>
+
+        <TextView
+            android:id="@+id/history_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="200"
+            android:gravity="center"
+            android:textSize="26sp"
+            tools:textColor="@android:color/holo_red_dark"
+            android:fontFamily="@font/roboto_bold"/>
+
+    </LinearLayout>
 
 </LinearLayout>
