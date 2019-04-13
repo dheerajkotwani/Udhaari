@@ -123,16 +123,16 @@ public class CustomerPendingFrag extends Fragment {
                             totalPendingTextView.setText(String.valueOf(totalPending));
                             noPaymentLayout.setVisibility(View.INVISIBLE);
                             borrowLayout.setVisibility(View.VISIBLE);
-                            adapter.updateList(paymentsList);
                         }
                         else {
                             noPaymentLayout.setVisibility(View.VISIBLE);
                             borrowLayout.setVisibility(View.INVISIBLE);
                         }
+                        adapter.updateList(paymentsList);
 
                     }
                     else {
-                        Timber.e("OnComplete: Fetching pending data failed!");
+                        Timber.e("OnComplete: Fetching pending data failed! %s", task.getException().toString());
                         errorLayout.setVisibility(View.VISIBLE);
                     }
 
@@ -140,24 +140,12 @@ public class CustomerPendingFrag extends Fragment {
                     loader.setVisibility(View.INVISIBLE);
                     layer.setVisibility(View.INVISIBLE);
 
-                })
-                .addOnFailureListener(e -> {
-                    Timber.e("OnFailure: Fetching pending data failed!");
-                    errorLayout.setVisibility(View.VISIBLE);
-                    loader.setVisibility(View.INVISIBLE);
-                    layer.setVisibility(View.INVISIBLE);
                 });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
 }

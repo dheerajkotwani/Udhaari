@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.VendorMainActivity"></activity>
+        <activity android:name=".Activities.ProfileActivity"></activity>
+        <activity android:name=".Activities.VendorMainActivity" />
         <activity android:name=".Activities.CustomerMainActivity" />
         <activity android:name=".Activities.VendorSignUpActivity" />
         <activity android:name=".Activities.CustomerSignUpActivity" />

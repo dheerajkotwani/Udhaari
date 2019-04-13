@@ -111,16 +111,13 @@ public class VendorHistoryFrag extends Fragment {
                         paymentModels.clear();
                         paymentModels = list;
 
-                        if (paymentModels.size() != 0) {
-                            adapter.updateList(paymentModels);
-                        }
-                        else {
+                        if (paymentModels.size() == 0)
                             noDataLayout.setVisibility(View.VISIBLE);
-                        }
 
+                        adapter.updateList(paymentModels);
                     }
                     else {
-                        Timber.e("OnComplete: Fetching pending data failed!");
+                        Timber.e("OnComplete: Fetching history data failed! %s", task.getException().toString());
                         errorLayout.setVisibility(View.VISIBLE);
                     }
 
@@ -128,19 +125,12 @@ public class VendorHistoryFrag extends Fragment {
                     loader.setVisibility(View.INVISIBLE);
                     layer.setVisibility(View.INVISIBLE);
 
-                })
-                .addOnFailureListener(e -> {
-                    Timber.e("OnFailure: Fetching pending data failed!");
-                    errorLayout.setVisibility(View.VISIBLE);
-                    loader.setVisibility(View.INVISIBLE);
-                    layer.setVisibility(View.INVISIBLE);
                 });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 
 }

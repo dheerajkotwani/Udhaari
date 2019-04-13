@@ -141,6 +141,5 @@ public class CustomerAddFrag extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 }

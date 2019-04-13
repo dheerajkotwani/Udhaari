@@ -100,7 +100,6 @@ public class VendorSignUpActivity extends AppCompatActivity {
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Timber.e("Signed up successfully!");
-                UdhaariApp.getInstance().saveToPref("name", name);
                 startActivity(new Intent(this, CustomerMainActivity.class));
                 finish();
             }
