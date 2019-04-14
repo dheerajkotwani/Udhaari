@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.text.SimpleDateFormat;
@@ -69,7 +68,6 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
         String type = notifModels.get(position).getType();
         String name = notifModels.get(position).getName();
         String phone = notifModels.get(position).getPhone();
-        orgTimeStamp = notifModels.get(position).getTimeStamp();
 
         if (type.equals("payment_request")) {
             holder.paymentReq.setVisibility(View.VISIBLE);
@@ -86,6 +84,7 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
             holder.notifItem.setOnClickListener(v -> {
                 boolean read = notifModels.get(position).getRead();
                 pos = position;
+                orgTimeStamp = notifModels.get(position).getTimeStamp();
                 if (!read)
                     acceptPayment(name, phone, amount, description);
             });
@@ -101,6 +100,7 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
             holder.notifItem.setOnClickListener(v -> {
                 boolean read = notifModels.get(position).getRead();
                 pos = position;
+                orgTimeStamp = notifModels.get(position).getTimeStamp();
                 if (!read)
                     acceptRequest(name, phone);
             });
@@ -152,55 +152,53 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
                             totalPending[0] = Integer.parseInt(snapshot.getDocuments().get(0).get("amount").toString());
 
                         //adding data
-                        firestore.runTransaction((Transaction.Function<Void>) transaction -> {
+                        WriteBatch batch = firestore.batch();
 
-                            Date date = Calendar.getInstance().getTime();
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
-                            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-                            String dateStr = sdf.format(date);
-                            String timeStr = sdf2.format(date);
-                            long timeStamp = System.currentTimeMillis();
-                            int latestAmount = Integer.parseInt(amount);
-                            totalPending[0] += latestAmount;
+                        Date date = Calendar.getInstance().getTime();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+                        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+                        String dateStr = sdf.format(date);
+                        String timeStr = sdf2.format(date);
+                        long timeStamp = System.currentTimeMillis();
+                        int latestAmount = Integer.parseInt(amount);
+                        totalPending[0] += latestAmount;
 
-                            //adding data to Customers -> Pending
-                            Map<String, Object> pendingVendorMap = new HashMap<>();
-                            pendingVendorMap.put("serviceName", userName);
-                            pendingVendorMap.put("phone", userPhone);
-                            pendingVendorMap.put("amount", totalPending[0]);
-                            transaction.set(firestore.collection("Customers").document(phone).collection("Pending").document(userPhone), pendingVendorMap);
+                        Map<String, Object> pendingVendorMap = new HashMap<>();
+                        pendingVendorMap.put("serviceName", userName);
+                        pendingVendorMap.put("phone", userPhone);
+                        pendingVendorMap.put("amount", totalPending[0]);
+                        batch.set(firestore.collection("Customers").document(phone).collection("Pending").document(userPhone), pendingVendorMap);
 
-                            //adding data to Customers -> History
-                            VendorModel historyVendorModel = new VendorModel(userName, userPhone, latestAmount, dateStr, timeStr, description, timeStamp, "settled");
-                            transaction.set(firestore.collection("Customers").document(phone).collection("History").document(), historyVendorModel);
+                        //adding data to Customers -> History
+                        VendorModel historyVendorModel = new VendorModel(userName, userPhone, latestAmount, dateStr, timeStr, description, timeStamp, "settled");
+                        batch.set(firestore.collection("Customers").document(phone).collection("History").document(), historyVendorModel);
 
-                            //adding data to Vendors -> Pending
-                            Map<String, Object> pendingCustomerMap = new HashMap<>();
-                            pendingCustomerMap.put("name", name);
-                            pendingCustomerMap.put("phone", phone);
-                            pendingCustomerMap.put("amount", totalPending[0]);
-                            transaction.set(firestore.collection("Vendors").document(userPhone).collection("Pending").document(phone), pendingCustomerMap);
+                        //adding data to Vendors -> Pending
+                        Map<String, Object> pendingCustomerMap = new HashMap<>();
+                        pendingCustomerMap.put("name", name);
+                        pendingCustomerMap.put("phone", phone);
+                        pendingCustomerMap.put("amount", totalPending[0]);
+                        batch.set(firestore.collection("Vendors").document(userPhone).collection("Pending").document(phone), pendingCustomerMap);
 
-                            //adding data to Vendors -> History
-                            CustomerModel historyCustomerModel = new CustomerModel(name, phone, latestAmount, dateStr, timeStr, description, timeStamp, "settled");
-                            transaction.set(firestore.collection("Vendors").document(userPhone).collection("History").document(), historyCustomerModel);
+                        //adding data to Vendors -> History
+                        CustomerModel historyCustomerModel = new CustomerModel(name, phone, latestAmount, dateStr, timeStr, description, timeStamp, "settled");
+                        batch.set(firestore.collection("Vendors").document(userPhone).collection("History").document(), historyCustomerModel);
 
-                            transaction.update(firestore.collection("Vendors").document(userPhone).collection("Notifs").document(String.valueOf(orgTimeStamp)), "read", true);
-                            notifModels.get(pos).setRead(true);
+                        batch.update(firestore.collection("Vendors").document(userPhone).collection("Notifs").document(String.valueOf(orgTimeStamp)), "read", true);
+                        notifModels.get(pos).setRead(true);
+                        notifyItemChanged(pos);
 
-                            return null;
-                        }).addOnCompleteListener(dataTask -> {
-                            if (dataTask.isSuccessful()) {
-                                Timber.e("Added new payment successfully!");
-                                Toast.makeText(context, "Transaction added!", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Timber.e("Update failed: %s", dataTask.getException().toString());
-                                Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
-                            }
-                            dialog.cancel();
+                        batch.commit().addOnCompleteListener(task1 -> {
+                           if (task1.isSuccessful()) {
+                               Timber.e("Added new payment successfully!");
+                               Toast.makeText(context, "Transaction added!", Toast.LENGTH_SHORT).show();
+                           }
+                           else {
+                               Timber.e("Update failed: %s", task1.getException().toString());
+                               Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
+                           }
+                           dialog.cancel();
                         });
-
 
                     }
                     else {

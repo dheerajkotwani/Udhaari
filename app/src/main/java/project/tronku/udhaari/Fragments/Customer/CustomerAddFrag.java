@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -72,6 +73,11 @@ public class CustomerAddFrag extends Fragment {
         view = inflater.inflate(R.layout.fragment_customer_add, container, false);
         unbinder = ButterKnife.bind(this, view);
         firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+
+        firestore.setFirestoreSettings(settings);
 
         adapter = new VendorListAdapter(getContext(), models);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -138,8 +144,4 @@ public class CustomerAddFrag extends Fragment {
                 });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 }

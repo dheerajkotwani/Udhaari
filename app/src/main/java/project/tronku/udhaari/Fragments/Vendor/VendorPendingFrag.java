@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -70,8 +71,13 @@ public class VendorPendingFrag extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_vendor_pending, container, false);
         unbinder = ButterKnife.bind(this, view);
-
         firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+
+        firestore.setFirestoreSettings(settings);
+
         adapter = new PendingAdapter(getContext(), paymentsList);
         String phone = UdhaariApp.getInstance().getDataFromPref("phone");
         fillRecyclerView(phone);

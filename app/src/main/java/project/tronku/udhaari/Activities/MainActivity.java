@@ -218,9 +218,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                    layer.setVisibility(View.INVISIBLE);
-                    loader.setVisibility(View.INVISIBLE);
-
                 });
     }
 

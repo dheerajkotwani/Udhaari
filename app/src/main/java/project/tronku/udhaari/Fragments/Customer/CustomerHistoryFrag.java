@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -72,6 +73,11 @@ public class CustomerHistoryFrag extends Fragment {
         view = inflater.inflate(R.layout.fragment_customer_history, container, false);
         unbinder = ButterKnife.bind(this, view);
         firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+
+        firestore.setFirestoreSettings(settings);
 
         adapter = new HistoryAdapter(getContext(), paymentModels);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

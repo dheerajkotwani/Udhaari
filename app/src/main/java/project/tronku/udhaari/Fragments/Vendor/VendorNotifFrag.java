@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -68,6 +69,11 @@ public class VendorNotifFrag extends Fragment {
         view = inflater.inflate(R.layout.fragment_vendor_notif, container, false);
         unbinder = ButterKnife.bind(this, view);
         firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+
+        firestore.setFirestoreSettings(settings);
 
         adapter = new NotifAdapter(getContext(), notifModels);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -137,9 +143,5 @@ public class VendorNotifFrag extends Fragment {
                 });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 
 }
