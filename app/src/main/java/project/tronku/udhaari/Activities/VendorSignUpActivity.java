@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,28 +87,31 @@ public class VendorSignUpActivity extends AppCompatActivity {
         Map<String, Object> userData = new HashMap<>();
         userData.put("name", name);
         userData.put("phone", phone);
+        userData.put("serviceName", serviceName);
         userData.put("type", "vendor");
 
         Map<String, Object> vendorData = new HashMap<>();
-        userData.put("name", name);
-        userData.put("phone", phone);
-        userData.put("serviceName", serviceName);
+        vendorData.put("name", name);
+        vendorData.put("phone", phone);
+        vendorData.put("serviceName", serviceName);
 
-        firestore.runTransaction((Transaction.Function<Void>) transaction -> {
-            transaction.set(firestore.collection("Vendor").document(phone), vendorData);
-            transaction.set(firestore.collection("Users").document(phone), userData);
-            return null;
-        }).addOnCompleteListener(task -> {
+        WriteBatch batch = firestore.batch();
+
+        batch.set(firestore.collection("Vendors").document(phone), vendorData);
+        batch.set(firestore.collection("Users").document(phone), userData);
+
+        batch.commit().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Timber.e("Signed up successfully!");
-                startActivity(new Intent(this, CustomerMainActivity.class));
+                startActivity(new Intent(this, VendorMainActivity.class));
                 finish();
             }
-        }).addOnFailureListener(e -> {
-            Timber.e("User signing failed: %s", e.getMessage());
-            loader.setVisibility(View.INVISIBLE);
-            layer.setVisibility(View.INVISIBLE);
-            Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
+            else {
+                Timber.e("User signing failed: %s", task.getException().toString());
+                loader.setVisibility(View.INVISIBLE);
+                layer.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
+            }
         });
 
     }

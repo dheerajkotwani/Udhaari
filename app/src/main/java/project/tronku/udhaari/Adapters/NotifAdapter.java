@@ -73,12 +73,12 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
             holder.paymentReq.setVisibility(View.VISIBLE);
             holder.addFriendReq.setVisibility(View.INVISIBLE);
 
-            String amount = String.valueOf(notifModels.get(position).getAmount());
-            String description = notifModels.get(position).getDescription();
+            String totalAmount = String.valueOf(notifModels.get(position).getTotalAmount());
+            String amountPaying = String.valueOf(notifModels.get(position).getAmountPaying());
 
-            SpannableStringBuilder str = new SpannableStringBuilder("You have been paid " + "₹" + amount + " by " + name);
-            str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 18, 20 + amount.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 23 + amount.length(), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableStringBuilder str = new SpannableStringBuilder("You have been paid " + "₹" + amountPaying + " by " + name);
+            str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 18, 20 + amountPaying.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 23 + amountPaying.length(), str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             holder.notifMessage.setText(str);
             holder.notifItem.setOnClickListener(v -> {
@@ -86,7 +86,7 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
                 pos = position;
                 orgTimeStamp = notifModels.get(position).getTimeStamp();
                 if (!read)
-                    acceptPayment(name, phone, amount, description);
+                    acceptPayment(name, phone, totalAmount, amountPaying);
             });
         }
         else {
@@ -107,7 +107,7 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
         }
     }
 
-    private void acceptPayment(String name, String phone, String amount, String description) {
+    private void acceptPayment(String name, String phone, String totalAmount, String amountPaying) {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.amount_dialog_layout);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -123,90 +123,60 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
         shopName.setText(name);
         message.setText("Accepting payment from:");
         acceptButton.setText("ACCEPT");
-        amountEditText.setText(amount);
+        amountEditText.setText(amountPaying);
         amountEditText.setEnabled(false);
-        descriptionEditText.setText(description);
-        descriptionEditText.setEnabled(false);
+        descriptionEditText.setVisibility(View.GONE);
 
         acceptButton.setOnClickListener(v -> {
             layer.setVisibility(View.VISIBLE);
             loader.setVisibility(View.VISIBLE);
-            uploadData(name, phone, amount, description);
+            updateDatabase(name, phone, Integer.parseInt(totalAmount), Integer.parseInt(amountPaying));
         });
 
         dialog.show();
     }
 
-    private void uploadData(String name, String phone, String amount, String description) {
-        final int[] totalPending = {0};
+    private void updateDatabase(String name, String phone, int amount, int amountPaying) {
+        firestore.runTransaction(transaction -> {
 
-        firestore.collection("Customers").document(phone).collection("Pending").whereEqualTo("phone", userPhone)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+            Date date = Calendar.getInstance().getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+            String dateStr = sdf.format(date);
+            String timeStr = sdf2.format(date);
+            long timeStamp = System.currentTimeMillis();
 
-                        QuerySnapshot snapshot = task.getResult();
-                        if (snapshot == null || snapshot.isEmpty())
-                            Timber.e("New payment to the vendor");
-                        else
-                            totalPending[0] = Integer.parseInt(snapshot.getDocuments().get(0).get("amount").toString());
+            //updating Customer -> Pending amount
+            transaction.update(firestore.collection("Customers")
+                    .document(phone).collection("Pending").document(userPhone), "amount", amount-amountPaying);
 
-                        //adding data
-                        WriteBatch batch = firestore.batch();
+            //adding Customer -> History
+            VendorModel historyVendorModel = new VendorModel(userName, userPhone, amountPaying, dateStr, timeStr, "", timeStamp, "settled");
+            transaction.set(firestore.collection("Customers").document(phone).collection("History").document(), historyVendorModel);
 
-                        Date date = Calendar.getInstance().getTime();
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
-                        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-                        String dateStr = sdf.format(date);
-                        String timeStr = sdf2.format(date);
-                        long timeStamp = System.currentTimeMillis();
-                        int latestAmount = Integer.parseInt(amount);
-                        totalPending[0] += latestAmount;
+            //updating Customer -> Pending amount
+            transaction.update(firestore.collection("Vendors")
+                    .document(userPhone).collection("Pending").document(phone), "amount", amount-amountPaying);
 
-                        Map<String, Object> pendingVendorMap = new HashMap<>();
-                        pendingVendorMap.put("serviceName", userName);
-                        pendingVendorMap.put("phone", userPhone);
-                        pendingVendorMap.put("amount", totalPending[0]);
-                        batch.set(firestore.collection("Customers").document(phone).collection("Pending").document(userPhone), pendingVendorMap);
+            //adding Vendor -> History
+            CustomerModel historyCustomerModel = new CustomerModel(name, phone, amountPaying, dateStr, timeStr, "", timeStamp, "settled");
+            transaction.set(firestore.collection("Vendors").document(userPhone).collection("History").document(), historyCustomerModel);
 
-                        //adding data to Customers -> History
-                        VendorModel historyVendorModel = new VendorModel(userName, userPhone, latestAmount, dateStr, timeStr, description, timeStamp, "settled");
-                        batch.set(firestore.collection("Customers").document(phone).collection("History").document(), historyVendorModel);
-
-                        //adding data to Vendors -> Pending
-                        Map<String, Object> pendingCustomerMap = new HashMap<>();
-                        pendingCustomerMap.put("name", name);
-                        pendingCustomerMap.put("phone", phone);
-                        pendingCustomerMap.put("amount", totalPending[0]);
-                        batch.set(firestore.collection("Vendors").document(userPhone).collection("Pending").document(phone), pendingCustomerMap);
-
-                        //adding data to Vendors -> History
-                        CustomerModel historyCustomerModel = new CustomerModel(name, phone, latestAmount, dateStr, timeStr, description, timeStamp, "settled");
-                        batch.set(firestore.collection("Vendors").document(userPhone).collection("History").document(), historyCustomerModel);
-
-                        batch.update(firestore.collection("Vendors").document(userPhone).collection("Notifs").document(String.valueOf(orgTimeStamp)), "read", true);
-                        notifModels.get(pos).setRead(true);
-                        notifyItemChanged(pos);
-
-                        batch.commit().addOnCompleteListener(task1 -> {
-                           if (task1.isSuccessful()) {
-                               Timber.e("Added new payment successfully!");
-                               Toast.makeText(context, "Transaction added!", Toast.LENGTH_SHORT).show();
-                           }
-                           else {
-                               Timber.e("Update failed: %s", task1.getException().toString());
-                               Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
-                           }
-                           dialog.cancel();
-                        });
-
-                    }
-                    else {
-                        Timber.e("Error while querying: %s", task.getException().toString());
-                        Toast.makeText(context, "Something went wrong! Try again.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+            transaction.update(firestore.collection("Vendors").document(userPhone).collection("Notifs").document(String.valueOf(orgTimeStamp)), "read", true);
+            return null;
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Timber.e("Added new payment successfully!");
+                Toast.makeText(context, "Transaction added! Swipe to refresh.", Toast.LENGTH_SHORT).show();
+                notifModels.get(pos).setRead(true);
+                notifyItemChanged(pos);
+            }
+            else {
+                Timber.e("Update failed: %s", task.getException().toString());
+                Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
+            }
+            dialog.cancel();
+        });
     }
 
     private void acceptRequest(String name, String phone) {

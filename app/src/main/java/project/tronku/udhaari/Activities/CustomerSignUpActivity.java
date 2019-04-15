@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,22 +84,23 @@ public class CustomerSignUpActivity extends AppCompatActivity {
         customerData.put("name", name);
         customerData.put("phone", phone);
 
-        firestore.runTransaction((Transaction.Function<Void>) transaction -> {
-            transaction.set(firestore.collection("Customers").document(phone), customerData);
-            transaction.set(firestore.collection("Users").document(phone), userData);
-            return null;
-        }).addOnCompleteListener(task -> {
+        WriteBatch batch = firestore.batch();
+
+        batch.set(firestore.collection("Customers").document(phone), customerData);
+        batch.set(firestore.collection("Users").document(phone), userData);
+
+        batch.commit().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Timber.e("Signed up successfully!");
-                UdhaariApp.getInstance().saveToPref("name", name);
                 startActivity(new Intent(this, CustomerMainActivity.class));
                 finish();
             }
-        }).addOnFailureListener(e -> {
-            Timber.e("User signing failed: %s", e.getMessage());
-            loader.setVisibility(View.INVISIBLE);
-            layer.setVisibility(View.INVISIBLE);
-            Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
+            else {
+                Timber.e("User signing failed: %s", task.getException().toString());
+                loader.setVisibility(View.INVISIBLE);
+                layer.setVisibility(View.INVISIBLE);
+                Toast.makeText(this, "Sign-up failed!", Toast.LENGTH_SHORT).show();
+            }
         });
 
     }

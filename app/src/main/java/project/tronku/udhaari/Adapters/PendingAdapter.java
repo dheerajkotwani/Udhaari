@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,11 +40,14 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
     private Context context;
     private ArrayList<PaymentModel> paymentModels;
     private Dialog dialog;
+    private String userName, userPhone;
 
     public PendingAdapter(Context context, ArrayList<PaymentModel> list) {
         this.context = context;
         paymentModels = list;
         dialog = new Dialog(context);
+        userName = UdhaariApp.getInstance().getDataFromPref("name");
+        userPhone = UdhaariApp.getInstance().getDataFromPref("phone");
     }
 
     @NonNull
@@ -100,53 +105,35 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.ViewHold
             else {
                 layer.setVisibility(View.VISIBLE);
                 loader.setVisibility(View.VISIBLE);
-                updateDatabase(name, phone, amount, amountPaying);
+                sendForVerification(phone, amount, amountPaying);
             }
         });
     }
 
-    private void updateDatabase(String name, String phone, int amount, int amountPaying) {
-        String userName = UdhaariApp.getInstance().getDataFromPref("name");
-        String userPhone = UdhaariApp.getInstance().getDataFromPref("phone");
+    private void sendForVerification(String phone, int amount, int amountPaying) {
+        long timeStamp = System.currentTimeMillis();
+        Map<String, Object> notifMap = new HashMap<>();
+        notifMap.put("name", userName);
+        notifMap.put("phone", userPhone);
+        notifMap.put("type", "payment_request");
+        notifMap.put("totalAmount", amount);
+        notifMap.put("amountPaying", amountPaying);
+        notifMap.put("timeStamp", timeStamp);
+        notifMap.put("read", false);
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.runTransaction(transaction -> {
-
-            Date date = Calendar.getInstance().getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
-            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-            String dateStr = sdf.format(date);
-            String timeStr = sdf2.format(date);
-            long timeStamp = System.currentTimeMillis();
-
-            //updating Customer -> Pending amount
-            transaction.update(firestore.collection("Customers")
-                    .document(userPhone).collection("Pending").document(phone), "amount", amount-amountPaying);
-
-            //adding Customer -> History
-            VendorModel historyVendorModel = new VendorModel(name, phone, amountPaying, dateStr, timeStr, "", timeStamp, "paid");
-            transaction.set(firestore.collection("Customers").document(userPhone).collection("History").document(), historyVendorModel);
-
-            //updating Customer -> Pending amount
-            transaction.update(firestore.collection("Vendors")
-                    .document(phone).collection("Pending").document(userPhone), "amount", amount-amountPaying);
-
-            //adding Vendor -> History
-            CustomerModel historyCustomerModel = new CustomerModel(userName, userPhone, amountPaying, dateStr, timeStr, "", timeStamp, "paid");
-            transaction.set(firestore.collection("Vendors").document(phone).collection("History").document(), historyCustomerModel);
-
-            return null;
-        }).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Timber.e("Added new payment successfully!");
-                Toast.makeText(context, "Transaction added! Swipe to refresh.", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Timber.e("Update failed: %s", task.getException().toString());
-                Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
-            }
-            dialog.cancel();
-        });
+        firestore.collection("Vendors").document(phone).collection("Notifs").document(String.valueOf(timeStamp)).set(notifMap)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Timber.e("Verification notif send");
+                        Toast.makeText(context, "Vendor's verification pending", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Timber.e("Verification send failed: %s", task.getException().toString());
+                        Toast.makeText(context, "Something went wrong! Try again!", Toast.LENGTH_LONG).show();
+                    }
+                    dialog.cancel();
+                });
     }
 
     @Override

@@ -23,12 +23,8 @@ public class NewUserActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        customerOption.setOnClickListener(v -> {
-            startActivity(new Intent(NewUserActivity.this, CustomerSignUpActivity.class));
-        });
+        customerOption.setOnClickListener(v -> startActivity(new Intent(NewUserActivity.this, CustomerSignUpActivity.class)));
 
-        vendorOption.setOnClickListener(v -> {
-            startActivity(new Intent(NewUserActivity.this, VendorSignUpActivity.class));
-        });
+        vendorOption.setOnClickListener(v -> startActivity(new Intent(NewUserActivity.this, VendorSignUpActivity.class)));
     }
 }

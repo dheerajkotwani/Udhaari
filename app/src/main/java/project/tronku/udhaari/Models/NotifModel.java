@@ -2,8 +2,8 @@ package project.tronku.udhaari.Models;
 
 public class NotifModel {
 
-    private String name, phone, description, type;
-    private int amount;
+    private String name, phone, type;
+    private int totalAmount, amountPaying;
     private boolean read;
     private long timeStamp;
 
@@ -15,12 +15,12 @@ public class NotifModel {
         this.read = read;
     }
 
-    public NotifModel(String name, String phone, String description, String type, int amount, long timeStamp, boolean read) {
+    public NotifModel(String name, String phone, String type, int totalAmount, int amountPaying, long timeStamp, boolean read) {
         this.name = name;
         this.phone = phone;
-        this.description = description;
         this.type = type;
-        this.amount = amount;
+        this.totalAmount = totalAmount;
+        this.amountPaying = amountPaying;
         this.timeStamp = timeStamp;
         this.read = read;
     }
@@ -41,28 +41,12 @@ public class NotifModel {
         this.phone = phone;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 
     public long getTimeStamp() {
@@ -79,5 +63,21 @@ public class NotifModel {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public int getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public int getAmountPaying() {
+        return amountPaying;
+    }
+
+    public void setAmountPaying(int amountPaying) {
+        this.amountPaying = amountPaying;
     }
 }

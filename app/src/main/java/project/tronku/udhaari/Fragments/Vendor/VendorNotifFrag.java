@@ -110,9 +110,9 @@ public class VendorNotifFrag extends Fragment {
                             boolean read = snapshot.getBoolean("read");
 
                             if (type.equals("payment_request")) {
-                                int amount = Integer.parseInt(snapshot.get("amount").toString());
-                                String description = snapshot.get("description").toString();
-                                NotifModel model = new NotifModel(name, phoneNo, description, type, amount, timestamp, read);
+                                int totalAmount = Integer.parseInt(snapshot.get("totalAmount").toString());
+                                int amountPaying = Integer.parseInt(snapshot.get("amountPaying").toString());
+                                NotifModel model = new NotifModel(name, phoneNo, type, totalAmount, amountPaying, timestamp, read);
                                 list.add(model);
                             }
                             else {

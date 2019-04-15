@@ -16,8 +16,12 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +29,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import project.tronku.udhaari.Models.CustomerModel;
 import project.tronku.udhaari.Models.PaymentModel;
+import project.tronku.udhaari.Models.VendorModel;
 import project.tronku.udhaari.R;
 import project.tronku.udhaari.UdhaariApp;
 import timber.log.Timber;
@@ -189,36 +195,77 @@ public class VendorListAdapter extends RecyclerView.Adapter<VendorListAdapter.Vi
             else {
                 layer.setVisibility(View.VISIBLE);
                 loader.setVisibility(View.VISIBLE);
-                sendForVerification(phone, amountStr, descriptionStr);
+                updateBorrowData(name, phone, Integer.parseInt(amountStr), descriptionStr);
             }
         });
 
         dialog.show();
     }
 
-    private void sendForVerification(String phone, String amount, String description) {
-        long timeStamp = System.currentTimeMillis();
-        Map<String, Object> notifMap = new HashMap<>();
-        notifMap.put("name", userName);
-        notifMap.put("phone", userPhone);
-        notifMap.put("type", "payment_request");
-        notifMap.put("amount", Integer.parseInt(amount));
-        notifMap.put("description", description);
-        notifMap.put("timeStamp", timeStamp);
-        notifMap.put("read", false);
+    private void updateBorrowData(String name, String phone, int amount, String description) {
+        final int[] totalPending = {0};
 
-        firestore.collection("Vendors").document(phone).collection("Notifs").document(String.valueOf(timeStamp)).set(notifMap)
-        .addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Timber.e("Verification notif send");
-                Toast.makeText(context, "Vendor's verification pending", Toast.LENGTH_LONG).show();
-            }
-            else {
-                Timber.e("Verification send failed: %s", task.getException().toString());
-                Toast.makeText(context, "Something went wrong! Try again!", Toast.LENGTH_LONG).show();
-            }
-            dialog.cancel();
-        });
+        firestore.collection("Customers").document(userPhone).collection("Pending").whereEqualTo("phone", phone)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        QuerySnapshot snapshot = task.getResult();
+                        if (snapshot == null || snapshot.isEmpty())
+                            Timber.e("New borrowing to the vendor");
+                        else
+                            totalPending[0] = Integer.parseInt(snapshot.getDocuments().get(0).get("amount").toString());
+
+                        //adding data
+                        WriteBatch batch = firestore.batch();
+
+                        Date date = Calendar.getInstance().getTime();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+                        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+                        String dateStr = sdf.format(date);
+                        String timeStr = sdf2.format(date);
+                        long timeStamp = System.currentTimeMillis();
+                        totalPending[0] += amount;
+
+                        Map<String, Object> pendingVendorMap = new HashMap<>();
+                        pendingVendorMap.put("serviceName", name);
+                        pendingVendorMap.put("phone", phone);
+                        pendingVendorMap.put("amount", totalPending[0]);
+                        batch.set(firestore.collection("Customers").document(userPhone).collection("Pending").document(phone), pendingVendorMap);
+
+                        //adding data to Customers -> History
+                        VendorModel historyVendorModel = new VendorModel(name, phone, amount, dateStr, timeStr, description, timeStamp, "borrowed");
+                        batch.set(firestore.collection("Customers").document(userPhone).collection("History").document(), historyVendorModel);
+
+                        //adding data to Vendors -> Pending
+                        Map<String, Object> pendingCustomerMap = new HashMap<>();
+                        pendingCustomerMap.put("name", userName);
+                        pendingCustomerMap.put("phone", userPhone);
+                        pendingCustomerMap.put("amount", totalPending[0]);
+                        batch.set(firestore.collection("Vendors").document(phone).collection("Pending").document(userPhone), pendingCustomerMap);
+
+                        //adding data to Vendors -> History
+                        CustomerModel historyCustomerModel = new CustomerModel(userName, userPhone, amount, dateStr, timeStr, description, timeStamp, "borrowed");
+                        batch.set(firestore.collection("Vendors").document(phone).collection("History").document(), historyCustomerModel);
+
+                        batch.commit().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                Timber.e("Added new payment successfully!");
+                                Toast.makeText(context, "Transaction added!", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Timber.e("Update failed: %s", task1.getException().toString());
+                                Toast.makeText(context, "Transaction failed! Try again.", Toast.LENGTH_SHORT).show();
+                            }
+                            dialog.cancel();
+                        });
+
+                    }
+                    else {
+                        Timber.e("Error while querying: %s", task.getException().toString());
+                        Toast.makeText(context, "Something went wrong! Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

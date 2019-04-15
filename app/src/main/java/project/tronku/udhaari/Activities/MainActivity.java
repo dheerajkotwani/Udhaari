@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
                                             Timber.e("VENDOR");
                                             String serviceName = queryDocumentSnapshots.getDocuments().get(0).get("serviceName").toString();
                                             UdhaariApp.getInstance().saveToPref("serviceName", serviceName);
+                                            Timber.e("ServiceName: %s", serviceName);
                                             startActivity(new Intent(MainActivity.this, VendorMainActivity.class));
                                             finish();
                                         }
