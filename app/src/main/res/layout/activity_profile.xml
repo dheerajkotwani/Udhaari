@@ -1,9 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.ProfileActivity">
+    android:background="@color/colorPrimary"
+    tools:context=".Activities.VendorSignUpActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:textSize="30sp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/roboto_thin"
+        android:textColor="@android:color/white"/>
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/user_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_user"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="330dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:textColorHint="#8effffff"
+            android:background="@drawable/form_bg"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:hint="Name"
+            android:enabled="false"
+            android:inputType="textPersonName"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="#ffffff" />
+
+        <EditText
+            android:id="@+id/user_phone_no"
+            android:layout_width="330dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:textColorHint="#8effffff"
+            android:background="@drawable/form_bg"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:hint="Phone no"
+            android:enabled="false"
+            android:inputType="phone"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="#ffffff" />
+
+        <EditText
+            android:visibility="gone"
+            android:id="@+id/user_service_name"
+            android:layout_width="330dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:textColorHint="#8effffff"
+            android:background="@drawable/form_bg"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:hint="Service Name"
+            android:enabled="false"
+            android:inputType="text"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/edit_button"
+            android:layout_width="330dp"
+            android:layout_height="58dp"
+            android:background="@drawable/button_large"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Edit Profile"
+            android:stateListAnimator="@null"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/save_button"
+            android:layout_width="330dp"
+            android:layout_height="58dp"
+            android:background="@drawable/button_large"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Save Changes"
+            android:stateListAnimator="@null"
+            android:fontFamily="@font/roboto_bold"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:src="@drawable/udhari_logo"
+        android:alpha="0.4"
+        android:layout_gravity="bottom |center_horizontal"
+        android:layout_marginBottom="20dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:visibility="invisible"
+        android:id="@+id/layer"
+        android:alpha="0.6"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:id="@+id/loader"/>
+
+</FrameLayout>

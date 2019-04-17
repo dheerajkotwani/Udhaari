@@ -87,7 +87,7 @@ public class VendorMainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
-                //
+                startActivity(new Intent(this, ProfileActivity.class));
                 return true;
             case R.id.about:
                 return true;

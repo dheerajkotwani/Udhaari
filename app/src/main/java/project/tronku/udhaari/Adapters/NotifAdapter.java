@@ -167,7 +167,7 @@ public class NotifAdapter extends RecyclerView.Adapter<NotifAdapter.Viewholder> 
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Timber.e("Added new payment successfully!");
-                Toast.makeText(context, "Transaction added! Swipe to refresh.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Transaction added!", Toast.LENGTH_SHORT).show();
                 notifModels.get(pos).setRead(true);
                 notifyItemChanged(pos);
             }
