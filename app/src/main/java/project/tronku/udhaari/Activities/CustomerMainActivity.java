@@ -92,6 +92,7 @@ public class CustomerMainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ProfileActivity.class));
                 return true;
             case R.id.about:
+                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.sign_out:
                 auth.signOut();

@@ -125,7 +125,7 @@ public class CustomerPendingFrag extends Fragment {
                         paymentsList.clear();
                         paymentsList = list;
 
-                        if (paymentsList.size() != 0) {
+                        if (paymentsList.size() != 0 && totalPending != 0) {
                             totalPendingTextView.setText(String.valueOf(totalPending));
                             noPaymentLayout.setVisibility(View.INVISIBLE);
                             borrowLayout.setVisibility(View.VISIBLE);
